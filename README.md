@@ -54,8 +54,17 @@ end
 lane :test3 do
   # `appicon_image_file` defaults to "fastlane/metadata/app_icon.png"
   appicon(
-    appicon_devices: [:iphone], 
+    appicon_devices: [:iphone],
     appicon_path: 'wwdcfamily/Images.xcassets' # output path
+  )
+end
+
+lane :splash_screen do
+  appicon(
+    appicon_image_file: 'spec/fixtures/splash_screen.png',
+    appicon_devices: [:universal],
+    appicon_path: "ios/App/App/Assets.xcassets",
+    appicon_name: 'Splash.imageset'
   )
 end
 
