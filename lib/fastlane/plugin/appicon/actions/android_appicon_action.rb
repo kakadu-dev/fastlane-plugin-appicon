@@ -50,13 +50,18 @@ module Fastlane
           FileUtils.mkdir_p(basepath)
 
           image.resize "#{width}x#{height}"
+          
+          unless params[:standard_rounded_radius] == 0
+              image = round(image, params[:standard_rounded_radius])
+          end
+          
           image.write basepath + filename
 
           if params[:generate_rounded]
             rounded_image = MiniMagick::Image.open(fname)
             rounded_image.format 'png'
             rounded_image.resize "#{width}x#{height}"
-            rounded_image = round(rounded_image)
+            rounded_image = round(rounded_image, params[:generate_rounded_radius])
             rounded_image.write basepath + filename.gsub('.png', '_round.png')
           end
         end
@@ -64,12 +69,12 @@ module Fastlane
         UI.success("Successfully stored launcher icons at '#{params[:appicon_path]}'")
       end
 
-      def self.round(img)
+      def self.round(img, radius)
         require 'mini_magick'
         img.format 'png'
 
         width = img[:width]-2
-        radius = width/2
+        radius = width/radius
 
         mask = ::MiniMagick::Image.open img.path
         mask.format 'png'
@@ -134,7 +139,17 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :generate_rounded,
                                description: "Generate round icons?",
                              default_value: false,
-                                      type: Boolean)
+                                      type: Boolean),
+          FastlaneCore::ConfigItem.new(key: :generate_rounded_radius,
+                               description: "Generate round icons radius?",
+                             default_value: 2,
+                                   optional: true,
+                                      type: Integer),
+          FastlaneCore::ConfigItem.new(key: :standard_rounded_radius,
+                               description: "Generate rounded standard icons (radius)?",
+                             default_value: 0,
+                                  optional: true,
+                                      type: Integer)
         ]
       end
 
