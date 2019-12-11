@@ -110,7 +110,7 @@ module Fastlane
         require 'mini_magick'
         img.format 'png'
 
-        width = img[:width]-2
+        width = img[:width]-3
         radius = width/radius
 
         mask = ::MiniMagick::Image.open img.path
@@ -120,7 +120,7 @@ module Fastlane
           m.alpha 'transparent'
           m.background 'none'
           m.fill 'white'
-          m.draw 'roundrectangle 1,1,%s,%s,%s,%s' % [width, width, radius, radius]
+          m.draw 'roundrectangle 2,2,%s,%s,%s,%s' % [width, width, radius, radius]
         end
 
         masked = img.composite(mask, 'png') do |i|
