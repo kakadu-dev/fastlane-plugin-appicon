@@ -43,10 +43,21 @@ module Fastlane
 
       def self.run(params)
         fname = params[:appicon_image_file]
+        original_file = params[:appicon_original_image_file]
         custom_sizes = params[:appicon_custom_sizes]
 
         icons = Helper::AppiconHelper.get_needed_icons(params[:appicon_icon_types], self.needed_icons, true, custom_sizes)
         icons.each do |icon|
+          if icon['device'] == 'notification' && File.file?(original_file) && !File.file?(fname)
+			MiniMagick::Tool::Convert.new do |convert|
+				convert << original_file
+				convert.merge! ['-fill', 'black', '-fuzz', '10%', '+opaque', 'white']
+				convert.negate
+				convert.transparent('black')
+				convert << fname
+			end
+          end
+
           image = MiniMagick::Image.open(fname)
 
           Helper::AppiconHelper.check_input_image_size(image, 1024)
@@ -149,6 +160,11 @@ module Fastlane
                                   env_name: "APPICON_IMAGE_FILE",
                                description: "Path to a square image file, at least 512x512",
                                   optional: false,
+                                      type: String),
+          FastlaneCore::ConfigItem.new(key: :appicon_original_image_file,
+                                  env_name: "APPICON_ORIGINAL_IMAGE_FILE",
+                               description: "Path to a original square image file, at least 512x512",
+                                  optional: true,
                                       type: String),
           FastlaneCore::ConfigItem.new(key: :appicon_icon_types,
                                   env_name: "APPICON_ICON_TYPES",
