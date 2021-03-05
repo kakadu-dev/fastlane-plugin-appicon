@@ -22,21 +22,8 @@ module Fastlane
             :xxhdpi => ['72x72'],
             :xxxhdpi => ['96x96'],
           },
-          splash_land: {
-            'land-ldpi' => ['320x200'],
-            'land-mdpi' => ['480x320'],
-            'land-hdpi' => ['800x480'],
-            'land-xhdpi' => ['1280x720'],
-            'land-xxhdpi' => ['1600x960'],
-            'land-xxxhdpi' => ['1920x1280']
-          },
           splash_port: {
-            'port-ldpi' => ['200x320'],
-            'port-mdpi' => ['320x480'],
-            'port-hdpi' => ['480x800'],
-            'port-xhdpi' => ['720x1280'],
-            'port-xxhdpi' => ['960x1600'],
-            'port-xxxhdpi' => ['1280x1920']
+            'port-xxxhdpi' => ['1280x1280']
           }
         }
       end
